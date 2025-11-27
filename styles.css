@@ -943,41 +943,118 @@ body.light-theme .theme-toggle:hover {
 }
 
 .modal {
-    background: var(--bg-card);
-    border-radius: 18px;
-    padding: 20px 20px 18px;
-    max-width: 360px;
+    background: rgba(26, 26, 46, 0.95);
+    border-radius: 24px;
+    padding: 24px;
+    max-width: 400px;
     width: 90%;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
     transform: translateY(10px);
-    transition: .25s
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal-overlay.active .modal {
-    transform: translateY(0)
+    transform: translateY(0);
+    opacity: 1;
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    background: var(--gradient-primary);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Modal input field styling */
+.modal .input-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.modal .input-wrapper input {
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.modal .input-wrapper input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.modal .input-wrapper i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.modal .date-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+.modal .date-input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.modal .date-input:focus {
+    border-color: var(--primary);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.modal .priority-selector {
+    margin-bottom: 0;
+    gap: 6px;
 }
 
 .modal-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
-    margin-top: 8px
+    gap: 12px;
+    margin-top: 24px;
 }
 
 .modal-btn {
-    border-radius: 999px;
+    border-radius: 12px;
     border: none;
-    font-size: 12px;
-    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 20px;
     cursor: pointer;
-    transition: .2s
+    transition: all 0.2s ease;
 }
 
 .modal-btn.cancel {
@@ -1034,7 +1111,7 @@ body.light-theme .theme-toggle:hover {
 
 .analytics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
     margin-bottom: 24px;
 }
