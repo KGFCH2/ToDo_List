@@ -256,7 +256,7 @@ function renderTasks() {
     filtered.forEach(task => {
         const li = document.createElement('li');
         li.className = `task-item priority-${task.priority || 'low'}${task.completed ? ' completed' : ''}`;
-        
+
         let dateHtml = `<span><i class="far fa-calendar"></i> ${new Date(task.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>`;
         if (task.startDate) {
             dateHtml += `<span><i class="fas fa-hourglass-start"></i> ${new Date(task.startDate).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</span>`;

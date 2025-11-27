@@ -83,10 +83,26 @@
               </div>
             </div>
             <div class="auth-field">
-              <div class="auth-switch">
-                New here?
-                <button type="button" onclick="navigate('#/signup')">Create an account</button>
+              <label class="auth-label">Password</label>
+              <div class="input-wrapper">
+                <i class="fas fa-lock"></i>
+                <input id="login-password" type="password" placeholder="Enter your password" required />
               </div>
+            </div>
+            <div class="auth-footer-row">
+              <label class="remember-me">
+                <input type="checkbox" id="remember-me" /> Remember me
+              </label>
+              <button type="button" class="muted-link-btn">Forgot password?</button>
+            </div>
+            <button type="submit" class="primary-btn">
+              <i class="fas fa-sign-in-alt"></i> Sign in
+            </button>
+          </form>
+          <div class="auth-switch">
+            New here?
+            <button type="button" onclick="navigate('#/signup')">Create an account</button>
+          </div>
         </section>
 
         <!-- SIGNUP VIEW -->

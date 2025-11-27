@@ -1551,3 +1551,104 @@ body.light-theme .theme-toggle:hover {
 .toggle-switch:hover .toggle-slider:before {
     box-shadow: 0 4px 8px rgba(99, 102, 241, 0.4);
 }
+
+/* New Styling for Signup View */
+#view-signup {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 24px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
+    animation: slideUpFade 0.5s ease forwards;
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#view-signup .auth-title {
+    font-size: 26px;
+    background: var(--gradient-primary);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+}
+
+#view-signup .input-wrapper input {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+#view-signup .input-wrapper input:focus {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(34, 211, 238, 0.15);
+}
+
+#view-signup .primary-btn {
+    background: linear-gradient(135deg, #22d3ee 0%, #818cf8 100%);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 13px;
+    padding: 14px;
+    margin-top: 10px;
+}
+
+#view-signup .primary-btn:hover {
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Styled Auth Switch Buttons */
+.auth-switch {
+    margin-top: 16px;
+    text-align: center;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.auth-switch button {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary-light);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: all 0.3s ease;
+}
+
+.auth-switch button:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    color: #fff;
+}
+
+#view-signup .auth-switch button {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+#view-signup .auth-switch button:hover {
+    background: rgba(34, 211, 238, 0.1);
+    box-shadow: 0 4px 12px rgba(34, 211, 238, 0.2);
+    color: #fff;
+}
