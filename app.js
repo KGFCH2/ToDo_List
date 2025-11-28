@@ -216,12 +216,12 @@ function loadSession() {
     if (!session) {
         session = JSON.parse(sessionStorage.getItem(STORAGE_SESSION) || 'null');
     }
-    
+
     if (session) {
         const user = getUsers().find(u => u.email === session.email);
-        if (user) { 
-            currentUser = user; 
-            loadTasksForUser(); 
+        if (user) {
+            currentUser = user;
+            loadTasksForUser();
         } else {
             // Clean up invalid sessions
             localStorage.removeItem(STORAGE_SESSION);
@@ -233,8 +233,8 @@ function saveSession(remember) {
     if (!currentUser) return;
     // Always save session for current browser session
     // 'remember' determines if it persists across browser restarts
-    const sessionData = { 
-        email: currentUser.email, 
+    const sessionData = {
+        email: currentUser.email,
         remember: remember,
         timestamp: Date.now()
     };
@@ -246,14 +246,14 @@ function saveSession(remember) {
         localStorage.removeItem(STORAGE_SESSION);
     }
 }
-function logout() { 
-    currentUser = null; 
-    tasks = []; 
+function logout() {
+    currentUser = null;
+    tasks = [];
     // Clear both localStorage and sessionStorage
-    localStorage.removeItem(STORAGE_SESSION); 
+    localStorage.removeItem(STORAGE_SESSION);
     sessionStorage.removeItem(STORAGE_SESSION);
-    showInfoToast('Signed out.'); 
-    navigate('#/login'); 
+    showInfoToast('Signed out.');
+    navigate('#/login');
 }
 
 function handleSignup(e) {
