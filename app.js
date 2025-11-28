@@ -211,19 +211,50 @@ function updateGreeting() {
 function getUsers() { return JSON.parse(localStorage.getItem(STORAGE_USERS) || '[]'); }
 function saveUsers(users) { localStorage.setItem(STORAGE_USERS, JSON.stringify(users)); }
 function loadSession() {
-    const session = JSON.parse(localStorage.getItem(STORAGE_SESSION) || 'null');
+    // Check both localStorage (persistent) and sessionStorage (current session only)
+    let session = JSON.parse(localStorage.getItem(STORAGE_SESSION) || 'null');
+    if (!session) {
+        session = JSON.parse(sessionStorage.getItem(STORAGE_SESSION) || 'null');
+    }
+    
     if (session) {
         const user = getUsers().find(u => u.email === session.email);
-        if (user) { currentUser = user; loadTasksForUser(); }
-        else localStorage.removeItem(STORAGE_SESSION);
+        if (user) { 
+            currentUser = user; 
+            loadTasksForUser(); 
+        } else {
+            // Clean up invalid sessions
+            localStorage.removeItem(STORAGE_SESSION);
+            sessionStorage.removeItem(STORAGE_SESSION);
+        }
     }
 }
 function saveSession(remember) {
     if (!currentUser) return;
-    if (remember) localStorage.setItem(STORAGE_SESSION, JSON.stringify({ email: currentUser.email }));
-    else localStorage.removeItem(STORAGE_SESSION);
+    // Always save session for current browser session
+    // 'remember' determines if it persists across browser restarts
+    const sessionData = { 
+        email: currentUser.email, 
+        remember: remember,
+        timestamp: Date.now()
+    };
+    if (remember) {
+        localStorage.setItem(STORAGE_SESSION, JSON.stringify(sessionData));
+    } else {
+        // Use sessionStorage for non-persistent sessions
+        sessionStorage.setItem(STORAGE_SESSION, JSON.stringify(sessionData));
+        localStorage.removeItem(STORAGE_SESSION);
+    }
 }
-function logout() { currentUser = null; tasks = []; localStorage.removeItem(STORAGE_SESSION); showInfoToast('Signed out.'); navigate('#/login'); }
+function logout() { 
+    currentUser = null; 
+    tasks = []; 
+    // Clear both localStorage and sessionStorage
+    localStorage.removeItem(STORAGE_SESSION); 
+    sessionStorage.removeItem(STORAGE_SESSION);
+    showInfoToast('Signed out.'); 
+    navigate('#/login'); 
+}
 
 function handleSignup(e) {
     e.preventDefault();
