@@ -10,45 +10,45 @@ A modern, study-oriented task management application with a beautiful glassmorph
 
 ## ✨ Features
 
-### Core Functionality
-- **Task Management** - Create, edit, delete, and complete tasks
-- **Priority Levels** - Low, Medium, and High priority with visual indicators
-- **Date Scheduling** - Set start and end dates for tasks
-- **Filtering** - View All, Pending, or Completed tasks
-- **Persistent Storage** - Tasks saved to localStorage per user
+### 🧩 Core Functionality
+- **🗂️ Task Management** - Create, edit, delete, and complete tasks
+- **🚦 Priority Levels** - Low, Medium, and High priority with visual indicators
+- **📅 Date Scheduling** - Set start and end dates for tasks
+- **🔎 Filtering** - View All, Pending, or Completed tasks
+- **💾 Persistent Storage** - Tasks saved to localStorage per user
 
-### User Experience
-- **Beautiful UI** - Modern glassmorphism design with blur effects
-- **Dynamic Backgrounds** - Section-specific blurred background images
-- **Dark/Light Theme** - Toggle between themes with smooth transitions
-- **Responsive Design** - Works seamlessly on desktop and mobile
-- **Loading Animation** - Smooth app loader on startup
+### 🎛️ User Experience
+- **🎨 Beautiful UI** - Modern glassmorphism design with blur effects
+- **🖼️ Dynamic Backgrounds** - Section-specific blurred background images
+- **🌗 Dark/Light Theme** - Toggle between themes with smooth transitions
+- **📱 Responsive Design** - Works seamlessly on desktop and mobile
+- **⏳ Loading Animation** - Smooth app loader on startup
 
-### Analytics & Insights
-- **Completion Rate** - Track your task completion percentage
-- **Tasks Completed** - Total completed tasks counter
-- **Average Tasks/Day** - Daily productivity metric
-- **Day Streak** - Consecutive days with task completions
-- **Priority Distribution** - Visual breakdown of task priorities
+### 📊 Analytics & Insights
+- **✅ Completion Rate** - Track your task completion percentage
+- **🏆 Tasks Completed** - Total completed tasks counter
+- **📈 Average Tasks/Day** - Daily productivity metric
+- **🔥 Day Streak** - Consecutive days with task completions
+- **📊 Priority Distribution** - Visual breakdown of task priorities
 
-### Email Reminders
-- **Automated Reminders** - Get email notifications 15 minutes before task due time
-- **Professional Templates** - Beautiful HTML email templates
-- **Toggle Control** - Enable/disable email reminders in settings
+### ✉️ Email Reminders
+- **⏰ Automated Reminders** - Get email notifications 15 minutes before task due time
+- **🧾 Professional Templates** - Beautiful HTML email templates
+- **🔁 Toggle Control** - Enable/disable email reminders in settings
 
-### Authentication
-- **User Accounts** - Sign up and sign in with email/password
-- **Remember Me** - Optional persistent sessions
-- **Per-User Data** - Tasks are stored separately for each user
+### 🔐 Authentication
+- **👥 User Accounts** - Sign up and sign in with email/password
+- **📌 Remember Me** - Optional persistent sessions
+- **🔒 Per-User Data** - Tasks are stored separately for each user
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- npm (comes with Node.js)
-- Gmail account (for email reminders)
+### 🧾 Prerequisites
+- 🟢 [Node.js](https://nodejs.org/) (v18 or higher)
+- 📦 npm (comes with Node.js)
+- ✉️ Gmail account (for email reminders)
 
-### Installation
+### 🛠️ Installation
 
 1. **Clone the repository**
    ```bash
@@ -61,7 +61,7 @@ A modern, study-oriented task management application with a beautiful glassmorph
    npm install
    ```
 
-3. **Set up environment variables**
+3. **🔑 Set up environment variables**
    
    Create a `.env` file in the root directory:
    ```env
@@ -73,12 +73,12 @@ A modern, study-oriented task management application with a beautiful glassmorph
 
    > **Note:** For Gmail, you need to use an [App Password](https://support.google.com/accounts/answer/185833), not your regular password. Enable 2-Step Verification first, then generate an App Password.
 
-4. **Start the server**
+4. **▶️ Start the server**
    ```bash
    npm start
    ```
 
-5. **Open in browser**
+5. **🌐 Open in browser**
    ```
    http://localhost:3000
    ```
@@ -109,7 +109,7 @@ TaskFlow Pro supports both dark and light themes:
 
 Toggle themes using the sun/moon button in the header.
 
-### CSS Variables
+### 🧪 CSS Variables
 The app uses CSS custom properties for easy customization:
 ```css
 :root {
@@ -122,7 +122,7 @@ The app uses CSS custom properties for easy customization:
 }
 ```
 
-## 📧 Email Setup
+## ✉️ Email Setup
 
 For email reminders to work:
 
@@ -133,7 +133,7 @@ For email reminders to work:
 
 Email reminders are sent 15 minutes before the task's end date/time.
 
-## 🛠️ API Endpoints
+## 📡 API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -144,19 +144,19 @@ Email reminders are sent 15 minutes before the task's end date/time.
 
 ## 🔧 Development
 
-### Scripts
+### ⚙️ Scripts
 ```bash
 npm start       # Start the production server
 npm run dev     # Start with nodemon (auto-reload)
 ```
 
-### Tech Stack
-- **Frontend:** Vanilla JavaScript, CSS3
-- **Backend:** Node.js, Express
-- **Email:** Nodemailer with Gmail
-- **Storage:** localStorage (client-side)
+### 🧰 Tech Stack
+- **🌐 Frontend:** Vanilla JavaScript, CSS3
+- **🖥️ Backend:** Node.js, Express
+- **📧 Email:** Nodemailer with Gmail
+- **💾 Storage:** localStorage (client-side)
 
-## 📱 Screenshots
+## 📸 Screenshots
 
 ### Sign-In
 ![Login Screen](images/Sign-In.png)
