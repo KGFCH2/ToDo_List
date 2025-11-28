@@ -1,0 +1,28 @@
+{
+    "name": "taskflow-pro",
+    "version": "1.0.0",
+    "description": "Personal task management application with email reminders",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js"
+    },
+    "keywords": [
+        "taskflow",
+        "task",
+        "reminder",
+        "email"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.18.2",
+        "nodemailer": "^6.9.7",
+        "cors": "^2.8.5",
+        "body-parser": "^1.20.2",
+        "dotenv": "^16.3.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.2"
+    }
+}
