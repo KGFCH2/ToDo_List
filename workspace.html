@@ -2,343 +2,554 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TaskFlow Pro – Workspace</title>
-    <!-- Fonts & icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- App styles -->
-    <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow Pro – Workspace</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <!-- Fonts & icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- App styles -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="no-bg">
-    <div class="app-shell">
-        <div class="container">
-            <!-- Top brand / user area -->
-            <div class="app-header">
-                <div class="brand">
-                    <div class="brand-logo">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <div class="brand-text">
-                        <h1>TaskFlow Pro</h1>
-                        <span>Personal task workspace</span>
-                    </div>
-                </div>
-                <div class="user-nav">
-                    <div id="user-info-when-auth" class="hidden">
-                        <span class="user-nav-name" id="nav-username"></span>
-                        <div class="user-avatar" id="nav-avatar"></div>
-                        <button class="user-menu-btn" onclick="logout()">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
-                    </div>
-                    <div id="user-info-when-guest">
-                        <button class="user-menu-btn" onclick="navigate('#/login')">
-                            <i class="fas fa-user"></i> Sign in
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation bar (shown only when logged in) -->
-            <nav id="app-navbar" class="app-navbar hidden">
-                <a href="todo.html#/app/home" class="nav-item" data-page="home">
-                    <i class="fas fa-home"></i>
-                    <span>Home</span>
-                </a>
-                <a href="#/app/tasks" class="nav-item active" data-page="tasks">
-                    <i class="fas fa-tasks"></i>
-                    <span>Tasks</span>
-                </a>
-                <a href="#/app/analytics" class="nav-item" data-page="analytics">
-                    <i class="fas fa-chart-pie"></i>
-                    <span>Analytics</span>
-                </a>
-                <a href="#/app/settings" class="nav-item" data-page="settings">
-                    <i class="fas fa-cog"></i>
-                    <span>Settings</span>
-                </a>
-            </nav>
-
-            <!-- Router views -->
-            <div class="views">
-                <!-- APP VIEW (TASKS) -->
-                <section id="view-app" class="hidden">
-                    <!-- Tasks Page -->
-                    <div id="page-tasks" class="app-page tasks-page">
-                        <div class="app-main-header">
-                            <div>
-                                <div class="auth-title">Tasks</div>
-                                <div class="date" id="current-date"></div>
-                            </div>
-                            <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-btn-tasks">
-                                <i class="fas fa-moon"></i>
-                            </button>
-                        </div>
-
-                        <div class="stats-bar">
-                            <div class="stat-item total">
-                                <div class="stat-number" id="total-count">0</div>
-                                <div class="stat-label">Total</div>
-                            </div>
-                            <div class="stat-item pending">
-                                <div class="stat-number" id="pending-count">0</div>
-                                <div class="stat-label">Pending</div>
-                            </div>
-                            <div class="stat-item done">
-                                <div class="stat-number" id="done-count">0</div>
-                                <div class="stat-label">Done</div>
-                            </div>
-                        </div>
-
-                        <div class="input-row">
-                            <div class="task-input-wrapper">
-                                <i class="fas fa-pencil-alt"></i>
-                                <input id="task-input" type="text" placeholder="What needs your focus today?" />
-                            </div>
-                            <button class="primary-btn" style="width: auto; padding-inline: 14px;" onclick="addTask()">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-
-                        <div class="date-row">
-                            <input type="datetime-local" id="task-start" class="date-input" aria-label="Start Date">
-                            <input type="datetime-local" id="task-end" class="date-input" aria-label="End Date">
-                        </div>
-
-                        <div class="priority-selector">
-                            <button class="priority-btn low active" data-priority="low" onclick="setPriority('low')">
-                                <i class="fas fa-circle"></i> Low
-                            </button>
-                            <button class="priority-btn medium" data-priority="medium" onclick="setPriority('medium')">
-                                <i class="fas fa-circle"></i> Medium
-                            </button>
-                            <button class="priority-btn high" data-priority="high" onclick="setPriority('high')">
-                                <i class="fas fa-circle"></i> High
-                            </button>
-                        </div>
-
-                        <div class="filters">
-                            <button class="filter-btn active" onclick="filterTasks('all')">All</button>
-                            <button class="filter-btn" onclick="filterTasks('pending')">Pending</button>
-                            <button class="filter-btn" onclick="filterTasks('completed')">Completed</button>
-                        </div>
-
-                        <ul id="task-list" class="task-list"></ul>
-
-                        <div class="app-footer-row">
-                            <div>
-                                <span id="footer-pending">0</span> tasks remaining
-                            </div>
-                            <button class="clear-completed-btn" onclick="clearCompleted()">
-                                <i class="fas fa-check-double"></i> Clear completed
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Analytics Page -->
-                    <div id="page-analytics" class="app-page analytics-page hidden">
-                        <div class="page-header">
-                            <h2><span style="margin-right: 8px;">📊</span> Analytics & Insights</h2>
-                            <p class="page-subtitle">Track your productivity over time</p>
-                        </div>
-                        <div class="app-main-header" style="margin-top: 8px; margin-bottom: 18px;">
-                            <div></div>
-                            <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-btn-analytics">
-                                <i class="fas fa-moon"></i>
-                            </button>
-                        </div>
-
-                        <div class="analytics-grid">
-                            <div class="analytics-card">
-                                <div class="card-icon"
-                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                                    <i class="fas fa-fire"></i>
-                                </div>
-                                <div class="card-content">
-                                    <h3 id="completion-rate">0%</h3>
-                                    <p>Completion Rate</p>
-                                </div>
-                            </div>
-
-                            <div class="analytics-card">
-                                <div class="card-icon"
-                                    style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                                    <i class="fas fa-trophy"></i>
-                                </div>
-                                <div class="card-content">
-                                    <h3 id="total-completed">0</h3>
-                                    <p>Tasks Completed</p>
-                                </div>
-                            </div>
-
-                            <div class="analytics-card">
-                                <div class="card-icon"
-                                    style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <div class="card-content">
-                                    <h3 id="avg-per-day">0</h3>
-                                    <p>Avg. Tasks/Day</p>
-                                </div>
-                            </div>
-
-                            <div class="analytics-card">
-                                <div class="card-icon"
-                                    style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <div class="card-content">
-                                    <h3 id="streak-days">0</h3>
-                                    <p>Day Streak</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="priority-breakdown">
-                            <h3>Priority Distribution</h3>
-                            <div class="priority-stats">
-                                <div class="priority-stat low">
-                                    <div class="stat-bar">
-                                        <div class="stat-fill" id="low-bar"></div>
-                                    </div>
-                                    <div class="stat-info">
-                                        <span class="stat-label"><i class="fas fa-circle"></i> Low</span>
-                                        <span class="stat-value" id="low-count">0</span>
-                                    </div>
-                                </div>
-                                <div class="priority-stat medium">
-                                    <div class="stat-bar">
-                                        <div class="stat-fill" id="medium-bar"></div>
-                                    </div>
-                                    <div class="stat-info">
-                                        <span class="stat-label"><i class="fas fa-circle"></i> Medium</span>
-                                        <span class="stat-value" id="medium-count">0</span>
-                                    </div>
-                                </div>
-                                <div class="priority-stat high">
-                                    <div class="stat-bar">
-                                        <div class="stat-fill" id="high-bar"></div>
-                                    </div>
-                                    <div class="stat-info">
-                                        <span class="stat-label"><i class="fas fa-circle"></i> High</span>
-                                        <span class="stat-value" id="high-count">0</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Settings Page -->
-                    <div id="page-settings" class="app-page settings-page hidden">
-                        <div class="page-header">
-                            <h2><i class="fas fa-cog"></i> Settings</h2>
-                            <p class="page-subtitle">Customize your workspace</p>
-                        </div>
-                        <div class="app-main-header" style="margin-top: 8px; margin-bottom: 18px;">
-                            <div></div>
-                            <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-btn-settings">
-                                <i class="fas fa-moon"></i>
-                            </button>
-                        </div>
-
-                        <div class="settings-section">
-                            <h3>Appearance</h3>
-                            <div class="settings-section">
-                                <h3>Account</h3>
-                                <div class="setting-info">
-                                    <i class="fas fa-user"></i>
-                                    <div>
-                                        <h4>Profile</h4>
-                                        <p id="user-email">email@example.com</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <i class="fas fa-database"></i>
-                                    <div>
-                                        <h4>Clear Data</h4>
-                                        <p>Remove all tasks and reset workspace</p>
-                                    </div>
-                                </div>
-                                <button class="danger-btn" onclick="clearAllData()">
-                                    <i class="fas fa-trash"></i> Clear All
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="settings-section">
-                            <h3>Notifications</h3>
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <i class="fas fa-bell"></i>
-                                    <div>
-                                        <h4>Task Reminders</h4>
-                                        <p>Get notified about pending tasks</p>
-                                    </div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="notifications-toggle">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
+<body>
+  <div id="app-loader" class="app-loader">
+    <div class="loader-spinner"></div>
+  </div>
+  <div class="app-shell">
+    <div class="container">
+      <!-- Top brand / user area -->
+      <div class="app-header">
+        <div class="brand">
+          <div class="brand-logo">
+            <img src="favicon.svg" alt="TaskFlow Pro" style="width: 34px; height: 34px; border-radius: 12px;">
+          </div>
+          <div class="brand-text">
+            <h1>TaskFlow Pro</h1>
+            <span>Personal task workspace</span>
+          </div>
         </div>
-    </div>
-
-    <!-- Edit Modal -->
-    <div class="modal-overlay" id="edit-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>Edit task</h3>
-            </div>
-            <div>
-                <div class="input-wrapper">
-                    <i class="fas fa-pen"></i>
-                    <input id="edit-input" type="text" placeholder="Update your task..." />
-                </div>
-                <div class="date-row" style="margin-top: 10px;">
-                    <input type="datetime-local" id="edit-start" class="date-input" aria-label="Start Date">
-                    <input type="datetime-local" id="edit-end" class="date-input" aria-label="End Date">
-                </div>
-                <div class="priority-selector" id="edit-priority-selector" style="margin-top: 6px;">
-                    <button class="priority-btn low" data-priority="low" onclick="setEditPriority('low')">
-                        <i class="fas fa-circle"></i> Low
-                    </button>
-                    <button class="priority-btn medium" data-priority="medium" onclick="setEditPriority('medium')">
-                        <i class="fas fa-circle"></i> Medium
-                    </button>
-                    <button class="priority-btn high" data-priority="high" onclick="setEditPriority('high')">
-                        <i class="fas fa-circle"></i> High
-                    </button>
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
-                <button class="modal-btn save" onclick="saveEdit()">Save</button>
-            </div>
+        <div class="user-nav">
+          <div id="user-info-when-auth" class="hidden">
+            <span class="user-nav-name" id="nav-username"></span>
+            <div class="user-avatar" id="nav-avatar"></div>
+            <button class="user-menu-btn" onclick="logout()">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+          <div id="user-info-when-guest">
+            <button class="user-menu-btn" onclick="navigate('#/login')">
+              <i class="fas fa-user"></i> Sign in
+            </button>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast">
-        <i class="fas fa-info-circle"></i>
-        <span id="toast-message">Message</span>
-    </div>
+      <!-- Navigation bar (shown only when logged in) -->
+      <nav id="app-navbar" class="app-navbar hidden">
+        <a href="#/app/home" class="nav-item" data-page="home">
+          <i class="fas fa-home"></i>
+          <span>Home</span>
+        </a>
+        <a href="#/app/tasks" class="nav-item active" data-page="tasks">
+          <i class="fas fa-tasks"></i>
+          <span>Tasks</span>
+        </a>
+        <a href="#/app/analytics" class="nav-item" data-page="analytics">
+          <i class="fas fa-chart-pie"></i>
+          <span>Analytics</span>
+        </a>
+        <a href="#/app/settings" class="nav-item" data-page="settings">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
 
-    <!-- App logic -->
-    <script src="app.js"></script>
+      <!-- Router views -->
+      <div class="views">
+        <!-- LOGIN VIEW -->
+        <section id="view-login" class="view-auth">
+          <div class="auth-card-header">
+            <div class="auth-title">Welcome back</div>
+            <div class="auth-subtitle">Sign in to access your tasks.</div>
+          </div>
+          <form class="auth-form" onsubmit="handleLogin(event)">
+            <div class="auth-field">
+              <label class="auth-label">Email</label>
+              <div class="input-wrapper">
+                <i class="fas fa-envelope"></i>
+                <input id="login-email" type="email" placeholder="you@example.com" required />
+              </div>
+            </div>
+            <div class="auth-field">
+              <label class="auth-label">Password</label>
+              <div class="input-wrapper">
+                <i class="fas fa-lock"></i>
+                <input id="login-password" type="password" placeholder="Enter your password" required />
+              </div>
+            </div>
+            <div class="auth-footer-row">
+              <label class="remember-me">
+                <input type="checkbox" id="remember-me" /> Remember me
+              </label>
+              <button type="button" class="muted-link-btn">Forgot password?</button>
+            </div>
+            <button type="submit" class="primary-btn">
+              <i class="fas fa-sign-in-alt"></i> Sign in
+            </button>
+          </form>
+          <div class="auth-switch">
+            New here?
+            <button type="button" onclick="navigate('#/signup')">Create an account</button>
+          </div>
+        </section>
+
+        <!-- SIGNUP VIEW -->
+        <section id="view-signup" class="view-auth hidden">
+          <div class="auth-card-header">
+            <div class="auth-title">Create your workspace</div>
+            <div class="auth-subtitle">One login, <span>your tasks</span> on this device.</div>
+          </div>
+          <form class="auth-form" onsubmit="handleSignup(event)">
+            <div class="auth-field">
+              <label class="auth-label">Full name</label>
+              <div class="input-wrapper">
+                <i class="fas fa-user"></i>
+                <input id="signup-name" type="text" placeholder="John Doe" required />
+              </div>
+            </div>
+            <div class="auth-field">
+              <label class="auth-label">Email</label>
+              <div class="input-wrapper">
+                <i class="fas fa-envelope"></i>
+                <input id="signup-email" type="email" placeholder="you@example.com" required />
+              </div>
+            </div>
+            <div class="auth-field">
+              <label class="auth-label">Password</label>
+              <div class="input-wrapper">
+                <i class="fas fa-lock"></i>
+                <input id="signup-password" type="password" placeholder="At least 6 characters" minlength="6"
+                  required />
+              </div>
+            </div>
+            <button type="submit" class="primary-btn">
+              <i class="fas fa-user-plus"></i> Create account
+            </button>
+          </form>
+          <div class="auth-switch">
+            Already have an account?
+            <button type="button" onclick="navigate('#/login')">Sign in instead</button>
+          </div>
+        </section>
+
+        <!-- APP VIEW (TASKS) -->
+        <section id="view-app" class="hidden">
+          <!-- Email Reminders Banner -->
+          <div class="reminder-banner" id="reminder-banner">
+            <div class="banner-content">
+              <i class="fas fa-envelope"></i>
+              <div>
+                <strong>Email Reminders Enabled</strong>
+                <p>Set an end date/time on tasks to get email reminders 15 minutes before due time.</p>
+              </div>
+            </div>
+            <button class="banner-btn" onclick="showReminderInfo()">
+              <i class="fas fa-question-circle"></i> Learn More
+            </button>
+            <button class="banner-close" onclick="closeBanner()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <!-- Home Page -->
+          <div id="page-home" class="app-page home-page">
+            <div class="app-main-header">
+              <div>
+                <div class="auth-title" id="app-greeting">Hi there 👋</div>
+                <div class="date" id="current-date"></div>
+              </div>
+              <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-btn">
+                <i class="fas fa-moon"></i>
+              </button>
+            </div>
+
+            <div class="home-overview">
+              <div class="overview-card">
+                <div class="overview-icon">
+                  <i class="fas fa-tasks"></i>
+                </div>
+                <div class="overview-content">
+                  <h3 id="home-total-tasks">0</h3>
+                  <p>Total Tasks</p>
+                </div>
+              </div>
+              <div class="overview-card">
+                <div class="overview-icon">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="overview-content">
+                  <h3 id="home-completed-tasks">0</h3>
+                  <p>Completed</p>
+                </div>
+              </div>
+              <div class="overview-card">
+                <div class="overview-icon">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="overview-content">
+                  <h3 id="home-pending-tasks">0</h3>
+                  <p>Pending</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="quick-actions">
+              <button class="quick-action-btn" onclick="navigate('#/app/tasks')">
+                <i class="fas fa-plus"></i>
+                <span>Add Task</span>
+              </button>
+              <button class="quick-action-btn" onclick="navigate('#/app/analytics')">
+                <i class="fas fa-chart-pie"></i>
+                <span>View Analytics</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tasks Page -->
+          <div id="page-tasks" class="app-page tasks-page">
+            <div class="app-main-header">
+              <div>
+                <div class="auth-title">Tasks</div>
+                <div class="date" id="current-date"></div>
+              </div>
+              <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-btn-tasks">
+                <i class="fas fa-moon"></i>
+              </button>
+            </div>
+
+            <div class="stats-bar">
+              <div class="stat-item total">
+                <div class="stat-number" id="total-count">0</div>
+                <div class="stat-label">Total</div>
+              </div>
+              <div class="stat-item pending">
+                <div class="stat-number" id="pending-count">0</div>
+                <div class="stat-label">Pending</div>
+              </div>
+              <div class="stat-item done">
+                <div class="stat-number" id="done-count">0</div>
+                <div class="stat-label">Done</div>
+              </div>
+            </div>
+
+            <div class="input-row">
+              <div class="task-input-wrapper">
+                <i class="fas fa-pencil-alt"></i>
+                <input id="task-input" type="text" placeholder="What needs your focus today?" />
+              </div>
+              <button class="primary-btn" style="width: auto; padding-inline: 14px;" onclick="addTask()">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+
+            <div class="date-row">
+              <input type="datetime-local" id="task-start" class="date-input" aria-label="Start Date">
+              <input type="datetime-local" id="task-end" class="date-input" aria-label="End Date">
+            </div>
+
+            <div class="priority-selector">
+              <button class="priority-btn low active" data-priority="low" onclick="setPriority('low')">
+                <i class="fas fa-circle"></i> Low
+              </button>
+              <button class="priority-btn medium" data-priority="medium" onclick="setPriority('medium')">
+                <i class="fas fa-circle"></i> Medium
+              </button>
+              <button class="priority-btn high" data-priority="high" onclick="setPriority('high')">
+                <i class="fas fa-circle"></i> High
+              </button>
+            </div>
+
+            <div class="filters">
+              <button class="filter-btn active" onclick="filterTasks('all')">All</button>
+              <button class="filter-btn" onclick="filterTasks('pending')">Pending</button>
+              <button class="filter-btn" onclick="filterTasks('completed')">Completed</button>
+            </div>
+
+            <ul id="task-list" class="task-list"></ul>
+
+            <div class="app-footer-row">
+              <div>
+                <span id="footer-pending">0</span> tasks remaining
+              </div>
+              <button class="clear-completed-btn" onclick="clearCompleted()">
+                <i class="fas fa-check-double"></i> Clear completed
+              </button>
+            </div>
+          </div>
+
+          <!-- Analytics Page -->
+          <div id="page-analytics" class="app-page analytics-page hidden">
+            <div class="page-header">
+              <h2><span style="margin-right: 8px;">📊</span> Analytics & Insights</h2>
+              <p class="page-subtitle">Track your productivity over time</p>
+            </div>
+            <div class="app-main-header" style="margin-top: 8px; margin-bottom: 18px;">
+              <div></div>
+              <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-btn-analytics">
+                <i class="fas fa-moon"></i>
+              </button>
+            </div>
+
+            <div class="analytics-grid">
+              <div class="analytics-card">
+                <div class="card-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                  <i class="fas fa-fire"></i>
+                </div>
+                <div class="card-content">
+                  <h3 id="completion-rate">0%</h3>
+                  <p>Completion Rate</p>
+                </div>
+              </div>
+
+              <div class="analytics-card">
+                <div class="card-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                  <i class="fas fa-trophy"></i>
+                </div>
+                <div class="card-content">
+                  <h3 id="total-completed">0</h3>
+                  <p>Tasks Completed</p>
+                </div>
+              </div>
+
+              <div class="analytics-card">
+                <div class="card-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                  <h3 id="avg-per-day">0</h3>
+                  <p>Avg. Tasks/Day</p>
+                </div>
+              </div>
+
+              <div class="analytics-card">
+                <div class="card-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                  <i class="fas fa-star"></i>
+                </div>
+                <div class="card-content">
+                  <h3 id="streak-days">0</h3>
+                  <p>Day Streak</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="priority-breakdown">
+              <h3>Priority Distribution</h3>
+              <div class="priority-stats">
+                <div class="priority-stat low">
+                  <div class="stat-bar">
+                    <div class="stat-fill" id="low-bar"></div>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-label"><i class="fas fa-circle"></i> Low</span>
+                    <span class="stat-value" id="low-count">0</span>
+                  </div>
+                </div>
+                <div class="priority-stat medium">
+                  <div class="stat-bar">
+                    <div class="stat-fill" id="medium-bar"></div>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-label"><i class="fas fa-circle"></i> Medium</span>
+                    <span class="stat-value" id="medium-count">0</span>
+                  </div>
+                </div>
+                <div class="priority-stat high">
+                  <div class="stat-bar">
+                    <div class="stat-fill" id="high-bar"></div>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-label"><i class="fas fa-circle"></i> High</span>
+                    <span class="stat-value" id="high-count">0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings Page -->
+          <div id="page-settings" class="app-page settings-page hidden">
+            <div class="page-header">
+              <h2><i class="fas fa-cog"></i> Settings</h2>
+              <p class="page-subtitle">Customize your workspace</p>
+            </div>
+            <div class="app-main-header" style="margin-top: 8px; margin-bottom: 18px;">
+              <div></div>
+              <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-btn-settings">
+                <i class="fas fa-moon"></i>
+              </button>
+            </div>
+
+            <div class="settings-section">
+              <h3>Appearance</h3>
+              <div class="settings-section">
+                <h3>Account</h3>
+                <div class="setting-info">
+                  <i class="fas fa-user"></i>
+                  <div>
+                    <h4>Profile</h4>
+                    <p id="user-email">email@example.com</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <i class="fas fa-database"></i>
+                  <div>
+                    <h4>Clear Data</h4>
+                    <p>Remove all tasks and reset workspace</p>
+                  </div>
+                </div>
+                <button class="danger-btn" onclick="clearAllData()">
+                  <i class="fas fa-trash"></i> Clear All
+                </button>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <h3>Notifications & Reminders</h3>
+              <div class="setting-item">
+                <div class="setting-info">
+                  <i class="fas fa-bell"></i>
+                  <div>
+                    <h4>Email Task Reminders</h4>
+                    <p>Receive emails 15 minutes before task due time</p>
+                  </div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="email-reminders-toggle" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <i class="fas fa-info-circle"></i>
+                  <div>
+                    <h4>How Email Reminders Work</h4>
+                    <p>When you set an end date/time for any task, we automatically send you an
+                      email reminder.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="setting-item">
+                <button class="info-btn" onclick="showReminderInfo()">
+                  <i class="fas fa-question-circle"></i> Learn More
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal-overlay" id="edit-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Edit task</h3>
+      </div>
+      <div>
+        <div class="input-wrapper">
+          <i class="fas fa-pen"></i>
+          <input id="edit-input" type="text" placeholder="Update your task..." />
+        </div>
+        <div class="date-row" style="margin-top: 10px;">
+          <input type="datetime-local" id="edit-start" class="date-input" aria-label="Start Date">
+          <input type="datetime-local" id="edit-end" class="date-input" aria-label="End Date">
+        </div>
+        <div class="priority-selector" id="edit-priority-selector" style="margin-top: 6px;">
+          <button class="priority-btn low" data-priority="low" onclick="setEditPriority('low')">
+            <i class="fas fa-circle"></i> Low
+          </button>
+          <button class="priority-btn medium" data-priority="medium" onclick="setEditPriority('medium')">
+            <i class="fas fa-circle"></i> Medium
+          </button>
+          <button class="priority-btn high" data-priority="high" onclick="setEditPriority('high')">
+            <i class="fas fa-circle"></i> High
+          </button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+        <button class="modal-btn save" onclick="saveEdit()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fas fa-info-circle"></i>
+    <span id="toast-message">Message</span>
+  </div>
+
+  <!-- Email Reminders Info Modal -->
+  <div class="modal-overlay" id="reminder-info-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Email Task Reminders</h3>
+      </div>
+      <div>
+        <div class="info-content">
+          <h4>How It Works</h4>
+          <ol>
+            <li>Create or edit a task and set an <strong>end date & time</strong></li>
+            <li>The system automatically schedules a reminder</li>
+            <li><strong>15 minutes before</strong> the due time, you'll receive an email</li>
+            <li>The email contains your task details and a link to TaskFlow Pro</li>
+          </ol>
+
+          <h4 style="margin-top: 20px;">Example</h4>
+          <p>If your task is due at <strong>5:00 PM today</strong>, you'll receive a reminder email at
+            <strong>4:45 PM</strong>
+          </p>
+
+          <h4 style="margin-top: 20px;">Email Setup Required</h4>
+          <p>For email reminders to work, the server must be running. Make sure you've:</p>
+          <ul>
+            <li>✓ Installed Node.js dependencies</li>
+            <li>✓ Created a <code>.env</code> file with your Gmail credentials</li>
+            <li>✓ Started the server with <code>npm start</code></li>
+          </ul>
+          <p style="color: var(--text-muted); font-size: 12px; margin-top: 10px;">See
+            <strong>EMAIL_SETUP.md</strong> for detailed instructions
+          </p>
+
+          <h4 style="margin-top: 20px;">Features</h4>
+          <ul>
+            <li>✓ Automatic scheduling 15 minutes before due time</li>
+            <li>✓ Professional HTML-formatted emails</li>
+            <li>✓ Direct link to your tasks in the email</li>
+            <li>✓ Works with any task priority (Low, Medium, High)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" onclick="closeReminderInfo()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App logic -->
+  <script src="app.js"></script>
 </body>
 
 </html>
