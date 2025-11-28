@@ -37,7 +37,7 @@ window.addEventListener('hashchange', handleRoute);
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize todo loaders
     initializeLoaders();
-    
+
     loadTheme();
     loadSession();
     displayDate();

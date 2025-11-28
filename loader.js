@@ -9,7 +9,7 @@ class TodoLoader {
 
     init() {
         if (!this.container) return;
-        
+
         // Create loader element
         this.loader = document.createElement('div');
         this.loader.className = 'todo-loader';
@@ -38,7 +38,7 @@ class TodoLoader {
                 <div class="todo-loader-text">Loading...</div>
             </div>
         `;
-        
+
         this.loader.style.display = 'none';
         this.container.appendChild(this.loader);
     }
