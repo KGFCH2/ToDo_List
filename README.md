@@ -158,17 +158,20 @@ npm run dev     # Start with nodemon (auto-reload)
 
 ## 📱 Screenshots
 
+### Sign-In
+![Login Screen](images/Sign-In.png)
+
 ### Home Dashboard
-Modern overview with task statistics and quick actions.
+![Home Dashboard](images/Home.png)
 
 ### Task Management
-Intuitive task creation with priority levels and date pickers.
+![Task Management](images/Task.png)
 
 ### Analytics
-Visual insights into your productivity patterns.
+![Analytics & Insights](images/Analytics.png)
 
 ### Settings
-Customize theme and manage email reminder preferences.
+![Settings](images/Settings.png)
 
 ## 🤝 Contributing
 
