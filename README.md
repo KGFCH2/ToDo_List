@@ -22,7 +22,8 @@ A modern, study-oriented task management application with a beautiful glassmorph
 - **🖼️ Dynamic Backgrounds** - Section-specific blurred background images
 - **🌗 Dark/Light Theme** - Toggle between themes with smooth transitions
 - **📱 Responsive Design** - Works seamlessly on desktop and mobile
-- **⏳ Loading Animation** - Smooth app loader on startup
+- **⏳ Todo-List Loader** - Beautiful animated loader with checkbox animations
+- **🔄 Session Management** - Auto-login with optional "Remember Me" feature
 
 ### 📊 Analytics & Insights
 - **✅ Completion Rate** - Track your task completion percentage
@@ -38,8 +39,10 @@ A modern, study-oriented task management application with a beautiful glassmorph
 
 ### 🔐 Authentication
 - **👥 User Accounts** - Sign up and sign in with email/password
-- **📌 Remember Me** - Optional persistent sessions
+- **📌 Remember Me** - Optional persistent sessions across browser restarts
+- **💾 Session Storage** - Automatic login during current session (even without Remember Me)
 - **🔒 Per-User Data** - Tasks are stored separately for each user
+- **🔐 Secure Logout** - Clean session cleanup on sign out
 
 ## 🚀 Getting Started
 
@@ -87,17 +90,19 @@ A modern, study-oriented task management application with a beautiful glassmorph
 
 ```
 To-Do/
-├── todo.html          # 🔐 Secure entry page (home/auth on this device)
-├── workspace.html     # 🧩 Main workspace (Tasks, Analytics, Settings)
-├── styles.css         # 🎨 Styling, themes, and blurred backgrounds
-├── app.js             # 🧠 Frontend logic: routing, tasks, auth, analytics
-├── server.js          # 📡 Express backend: APIs + email reminders
-├── favicon.svg        # 🪪 App icon
-├── package.json       # 📦 NPM scripts and dependencies
-├── .env               # 🔑 Environment variables (not committed)
-├── .gitignore         # 🙈 Git ignore rules
-├── LICENSE            # ⚖️ MIT License (Babin Bid)
-└── README.md          # 📘 Project documentation
+├── 📄 todo.html          # 🔐 Secure entry page (home/auth)
+├── 📄 workspace.html     # 🧩 Main workspace (Tasks, Analytics, Settings)
+├── 🎨 styles.css         # 🎨 Global styling, themes, blurred backgrounds
+├── ⚙️ app.js             # 🧠 Frontend logic: routing, tasks, auth, analytics
+├── 🔄 loader.js          # ⏳ Todo-list themed loader component
+├── 🎭 loader.css         # 💅 Loader animations and styles
+├── 🖥️ server.js          # 📡 Express backend: APIs + email reminders
+├── 🪪 favicon.svg        # 🎯 App icon
+├── 📦 package.json       # 📋 NPM scripts and dependencies
+├── 🔐 .env               # 🔑 Environment variables (not committed)
+├── 🙈 .gitignore         # 📝 Git ignore rules
+├── ⚖️ LICENSE            # ⚖️ MIT License (Babin Bid)
+└── 📘 README.md          # 📖 Project documentation
 ```
 
 ## 🎨 Theming
@@ -135,12 +140,12 @@ Email reminders are sent 15 minutes before the task's end date/time.
 
 ## 📡 API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Serve main HTML page |
-| GET | `/api/health` | Health check |
-| POST | `/api/send-reminder` | Send immediate reminder email |
-| POST | `/api/schedule-reminder` | Schedule a future reminder |
+| Method | Endpoint | Description | 📋 Status |
+|--------|----------|-------------|----------|
+| GET | `/` | 🏠 Serve main HTML page | ✅ Active |
+| GET | `/api/health` | 💚 Health check | ✅ Active |
+| POST | `/api/send-reminder` | 📧 Send immediate reminder email | ✅ Active |
+| POST | `/api/schedule-reminder` | ⏰ Schedule a future reminder | ✅ Active |
 
 ## 🔧 Development
 
@@ -151,35 +156,51 @@ npm run dev     # Start with nodemon (auto-reload)
 ```
 
 ### 🧰 Tech Stack
-- **🌐 Frontend:** Vanilla JavaScript, CSS3
-- **🖥️ Backend:** Node.js, Express
-- **📧 Email:** Nodemailer with Gmail
-- **💾 Storage:** localStorage (client-side)
+- **🌐 Frontend:** Vanilla JavaScript, CSS3, HTML5
+- **🖥️ Backend:** Node.js, Express.js
+- **📧 Email:** Nodemailer with Gmail SMTP
+- **💾 Storage:** localStorage & sessionStorage (client-side)
+- **🎨 UI/UX:** Glassmorphism, CSS animations, Dynamic backgrounds
+- **⏳ Loader:** Custom todo-list themed animated loader
 
 ## 📸 Screenshots
 
-### Sign-In
+### 🔐 Sign-In
 ![Login Screen](images/Sign-In.png)
+*Clean authentication interface with Remember Me option*
 
-### Home Dashboard
+### 🏠 Home Dashboard
 ![Home Dashboard](images/Home.png)
+*Quick overview of tasks, completion stats, and productivity metrics*
 
-### Task Management
+### ✅ Task Management
 ![Task Management](images/Task.png)
+*Intuitive task creation with priorities, dates, and filtering*
 
-### Analytics
+### 📊 Analytics
 ![Analytics & Insights](images/Analytics.png)
+*Visual insights: completion rate, streaks, and priority distribution*
 
-### Settings
+### ⚙️ Settings
 ![Settings](images/Settings.png)
+*Customize theme, manage email reminders, and account preferences*
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. 🍴 Fork the repository
+2. 🌿 Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. 💾 Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. 🚀 Push to the branch (`git push origin feature/AmazingFeature`)
+5. 🔀 Open a Pull Request
+
+## 💡 Future Enhancements
+
+- 🔔 Push notifications for tasks
+- 🌐 Cloud sync across devices
+- 👥 Team collaboration features
+- 📱 Mobile app (React Native)
+- 🎯 Task categories and tags
+- 📊 Advanced analytics dashboard
 
 ## 📄 License
 
@@ -187,11 +208,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👤 Author
 
-**KGFCH2**
+**Babin Bid** 🎓
 - GitHub: [@KGFCH2](https://github.com/KGFCH2)
+- 📧 Email: babinbid05@gmail.com
+- 🌟 Project: Study & Learning Portfolio
 
 ---
 
 <p align="center">
-  Made with ❤️ by Babin Bid
+  Made with ❤️ by Babin Bid<br>
+  ⭐ Star this repo if you found it helpful!
 </p>
