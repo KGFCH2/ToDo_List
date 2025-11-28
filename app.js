@@ -3,6 +3,9 @@ const STORAGE_USERS = 'taskflow_users';
 const STORAGE_SESSION = 'taskflow_session';
 const STORAGE_TASKS_PREFIX = 'taskflow_tasks_';
 const STORAGE_THEME = 'taskflow_theme';
+const STORAGE_REMINDERS = 'taskflow_reminders';
+const STORAGE_REMINDER_SETTINGS = 'taskflow_reminder_settings';
+const API_BASE_URL = 'http://localhost:3000';
 
 let currentUser = null;
 let tasks = [];
@@ -11,6 +14,7 @@ let currentPriority = 'low';
 let editPriority = 'low';
 let editingTaskId = null;
 let currentPage = 'tasks';
+let emailRemindersEnabled = true;
 
 window.addEventListener('hashchange', handleRoute);
 document.addEventListener('DOMContentLoaded', () => {
@@ -18,7 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSession();
     displayDate();
     setupKeyboardShortcuts();
+    loadReminderSettings();
     handleRoute();
+
+    // Hide loader
+    setTimeout(() => {
+        const loader = document.getElementById('app-loader');
+        if (loader) loader.classList.add('hidden');
+    }, 800);
 });
 
 function navigate(hash) { window.location.hash = hash; }
@@ -38,8 +49,13 @@ function handleRoute() {
     if (navbar) navbar.classList.add('hidden');
 
     if (!loggedIn) {
+        document.body.classList.remove('bg-home', 'bg-tasks', 'bg-analytics', 'bg-settings');
+        document.body.classList.add('bg-auth');
+
         if (isWorkspace) {
-            window.location.href = 'todo.html#/login';
+            // Redirect to login page with return URL
+            const returnHash = window.location.hash;
+            window.location.href = 'todo.html?returnTo=' + encodeURIComponent(returnHash) + '#/login';
             return;
         }
         if (hash.startsWith('#/app')) {
@@ -51,6 +67,12 @@ function handleRoute() {
     }
 
     if (loggedIn && (hash === '#/login' || hash === '#/signup')) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const returnTo = urlParams.get('returnTo');
+        if (returnTo) {
+            window.location.href = 'workspace.html' + returnTo;
+            return;
+        }
         navigate('#/app/home');
         updateUserNav();
         return;
@@ -100,6 +122,11 @@ function handleRoute() {
 
 function showPage(page) {
     currentPage = page;
+
+    // Update background
+    document.body.classList.remove('bg-home', 'bg-tasks', 'bg-analytics', 'bg-settings', 'bg-auth');
+    document.body.classList.add(`bg-${page}`);
+
     const pages = ['home', 'tasks', 'analytics', 'settings'];
     pages.forEach(p => {
         const el = document.getElementById(`page-${p}`);
@@ -164,7 +191,16 @@ function handleSignup(e) {
     const users = getUsers();
     if (users.some(u => u.email === email)) { showErrorToast('Account already exists for that email.'); return; }
     const user = { name, email, password }; users.push(user); saveUsers(users);
-    currentUser = user; saveSession(true); showSuccessToast('Account created.'); navigate('#/app/home');
+    currentUser = user; saveSession(true); showSuccessToast('Account created.');
+
+    // Check for returnTo param
+    const urlParams = new URLSearchParams(window.location.search);
+    const returnTo = urlParams.get('returnTo');
+    if (returnTo) {
+        window.location.href = 'workspace.html' + returnTo;
+    } else {
+        navigate('#/app/home');
+    }
 }
 
 function handleLogin(e) {
@@ -172,9 +208,31 @@ function handleLogin(e) {
     const email = document.getElementById('login-email').value.trim().toLowerCase();
     const password = document.getElementById('login-password').value.trim();
     const remember = document.getElementById('remember-me').checked;
-    const user = getUsers().find(u => u.email === email && u.password === password);
-    if (!user) { showErrorToast('Invalid email or password.'); return; }
-    currentUser = user; saveSession(remember); showSuccessToast('Signed in.'); navigate('#/app/home');
+
+    const users = getUsers();
+    if (users.length === 0) {
+        showErrorToast('No accounts found. Please create an account.');
+        return;
+    }
+
+    const user = users.find(u => u.email === email && u.password === password);
+    if (!user) {
+        // Debug help
+        console.log('Login failed for:', email);
+        console.log('Available users:', users.map(u => u.email));
+        showErrorToast('Invalid email or password.');
+        return;
+    }
+    currentUser = user; saveSession(remember); showSuccessToast('Signed in.');
+
+    // Check for returnTo param
+    const urlParams = new URLSearchParams(window.location.search);
+    const returnTo = urlParams.get('returnTo');
+    if (returnTo) {
+        window.location.href = 'workspace.html' + returnTo;
+    } else {
+        navigate('#/app/home');
+    }
 }
 
 function storageKeyForCurrentUser() { return currentUser ? STORAGE_TASKS_PREFIX + currentUser.email : null; }
@@ -201,17 +259,37 @@ function addTask() {
         priority: currentPriority,
         createdAt: new Date().toISOString(),
         startDate: start,
-        endDate: end
+        endDate: end,
+        reminderSent: false
     };
     tasks.unshift(task);
     saveTasksForUser();
+
+    // Schedule reminder if end date is set
+    if (end) {
+        scheduleTaskReminder(task);
+    }
+
     renderTasks();
     input.value = '';
     document.getElementById('task-start').value = '';
     document.getElementById('task-end').value = '';
     showSuccessToast('Task added.');
 }
-function toggleTask(id) { tasks = tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t); saveTasksForUser(); renderTasks(); }
+function toggleTask(id) {
+    tasks = tasks.map(t => {
+        if (t.id === id) {
+            const wasCompleted = t.completed;
+            t.completed = !t.completed;
+            if (t.completed && !wasCompleted) {
+                t.completedAt = new Date().toISOString();
+            }
+        }
+        return t;
+    });
+    saveTasksForUser();
+    renderTasks();
+}
 function deleteTask(id, event) { event.stopPropagation(); tasks = tasks.filter(t => t.id !== id); saveTasksForUser(); renderTasks(); showInfoToast('Task deleted.'); }
 function editTask(id, event) {
     event.stopPropagation();
@@ -351,8 +429,21 @@ function updateAnalytics() {
 
     document.getElementById('completion-rate').textContent = completionRate + '%';
     document.getElementById('total-completed').textContent = completed;
-    document.getElementById('avg-per-day').textContent = Math.round(total / 7); // Mock weekly average
-    document.getElementById('streak-days').textContent = completed > 0 ? Math.min(completed, 7) : 0;
+
+    // Calculate Avg. Tasks/Day: average completed tasks per day since first task
+    const completedTasks = tasks.filter(t => t.completed && t.completedAt);
+    let avgPerDay = 0;
+    if (completedTasks.length > 0) {
+        const firstTaskDate = new Date(Math.min(...tasks.map(t => new Date(t.createdAt))));
+        const now = new Date();
+        const daysDiff = Math.max(1, Math.ceil((now - firstTaskDate) / (1000 * 60 * 60 * 24)));
+        avgPerDay = Math.round(completed / daysDiff);
+    }
+    document.getElementById('avg-per-day').textContent = avgPerDay;
+
+    // Calculate Day Streak: current consecutive days with at least one completion
+    const streakDays = calculateCurrentStreak();
+    document.getElementById('streak-days').textContent = streakDays;
 
     // Priority distribution
     const low = tasks.filter(t => t.priority === 'low').length;
@@ -370,6 +461,32 @@ function updateAnalytics() {
     document.getElementById('low-count').textContent = low;
     document.getElementById('medium-count').textContent = medium;
     document.getElementById('high-count').textContent = high;
+}
+
+function calculateCurrentStreak() {
+    const completedTasks = tasks.filter(t => t.completed && t.completedAt);
+    if (completedTasks.length === 0) return 0;
+
+    // Get unique completion dates (YYYY-MM-DD)
+    const completionDates = [...new Set(completedTasks.map(t => new Date(t.completedAt).toISOString().split('T')[0]))];
+    completionDates.sort();
+
+    const today = new Date().toISOString().split('T')[0];
+    let streak = 0;
+    let currentDate = new Date(today);
+
+    // Check backwards from today
+    while (true) {
+        const dateStr = currentDate.toISOString().split('T')[0];
+        if (completionDates.includes(dateStr)) {
+            streak++;
+            currentDate.setDate(currentDate.getDate() - 1);
+        } else {
+            break;
+        }
+    }
+
+    return streak;
 }
 
 // Settings
@@ -398,3 +515,109 @@ function clearAllData() {
         showSuccessToast('All tasks cleared.');
     }
 }
+
+// Email Reminder Functions
+async function scheduleTaskReminder(task) {
+    if (!currentUser || !task.endDate || !emailRemindersEnabled) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/schedule-reminder`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: currentUser.email,
+                taskText: task.text,
+                dueDate: task.endDate,
+                userName: currentUser.name
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Reminder scheduled:', data);
+            // Store reminder info locally
+            saveReminderSchedule(task.id, true);
+        } else {
+            console.error('Failed to schedule reminder');
+        }
+    } catch (error) {
+        console.error('Error scheduling reminder:', error);
+    }
+}
+
+async function sendTaskReminder(task) {
+    if (!currentUser || task.reminderSent) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/send-reminder`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: currentUser.email,
+                taskText: task.text,
+                dueDate: task.endDate,
+                userName: currentUser.name
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Reminder sent:', data);
+            // Mark task reminder as sent
+            tasks = tasks.map(t => t.id === task.id ? { ...t, reminderSent: true } : t);
+            saveTasksForUser();
+            showSuccessToast('Task reminder sent to your email!');
+        }
+    } catch (error) {
+        console.error('Error sending reminder:', error);
+    }
+}
+
+function saveReminderSchedule(taskId, scheduled) {
+    const reminders = JSON.parse(localStorage.getItem(STORAGE_REMINDERS) || '{}');
+    reminders[taskId] = { scheduled, scheduledAt: new Date().toISOString() };
+    localStorage.setItem(STORAGE_REMINDERS, JSON.stringify(reminders));
+}
+
+// Reminder Settings Management
+function loadReminderSettings() {
+    const settings = JSON.parse(localStorage.getItem(STORAGE_REMINDER_SETTINGS) || '{"emailReminders": true}');
+    emailRemindersEnabled = settings.emailReminders !== false;
+
+    const toggle = document.getElementById('email-reminders-toggle');
+    if (toggle) {
+        toggle.checked = emailRemindersEnabled;
+        toggle.addEventListener('change', toggleReminderSettings);
+    }
+}
+
+function toggleReminderSettings(e) {
+    emailRemindersEnabled = e.target.checked;
+    const settings = { emailReminders: emailRemindersEnabled };
+    localStorage.setItem(STORAGE_REMINDER_SETTINGS, JSON.stringify(settings));
+
+    const message = emailRemindersEnabled ? 'Email reminders enabled' : 'Email reminders disabled';
+    showInfoToast(message);
+}
+
+function showReminderInfo() {
+    const modal = document.getElementById('reminder-info-modal');
+    if (modal) {
+        modal.classList.add('active');
+    }
+}
+
+function closeReminderInfo() {
+    const modal = document.getElementById('reminder-info-modal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+function closeBanner() {
+    const banner = document.getElementById('reminder-banner');
+    if (banner) {
+        banner.classList.add('hidden');
+    }
+}
+
