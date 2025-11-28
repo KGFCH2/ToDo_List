@@ -160,6 +160,11 @@ body.bg-auth::before {
     }
 }
 
+/* Tasks list loader (mini) */
+.task-list-container {
+    position: relative;
+}
+
 /* Animated gradient orbs */
 body::after {
     content: "";

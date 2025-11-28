@@ -15,6 +15,7 @@
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- App styles -->
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="loader.css" />
 </head>
 
 <body>
@@ -180,31 +181,33 @@
             </div>
 
             <div class="home-overview">
-              <div class="overview-card">
-                <div class="overview-icon">
-                  <i class="fas fa-tasks"></i>
+              <div id="home-content">
+                <div class="overview-card">
+                  <div class="overview-icon">
+                    <i class="fas fa-tasks"></i>
+                  </div>
+                  <div class="overview-content">
+                    <h3 id="home-total-tasks">0</h3>
+                    <p>Total Tasks</p>
+                  </div>
                 </div>
-                <div class="overview-content">
-                  <h3 id="home-total-tasks">0</h3>
-                  <p>Total Tasks</p>
+                <div class="overview-card">
+                  <div class="overview-icon">
+                    <i class="fas fa-check-circle"></i>
+                  </div>
+                  <div class="overview-content">
+                    <h3 id="home-completed-tasks">0</h3>
+                    <p>Completed</p>
+                  </div>
                 </div>
-              </div>
-              <div class="overview-card">
-                <div class="overview-icon">
-                  <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="overview-content">
-                  <h3 id="home-completed-tasks">0</h3>
-                  <p>Completed</p>
-                </div>
-              </div>
-              <div class="overview-card">
-                <div class="overview-icon">
-                  <i class="fas fa-clock"></i>
-                </div>
-                <div class="overview-content">
-                  <h3 id="home-pending-tasks">0</h3>
-                  <p>Pending</p>
+                <div class="overview-card">
+                  <div class="overview-icon">
+                    <i class="fas fa-clock"></i>
+                  </div>
+                  <div class="overview-content">
+                    <h3 id="home-pending-tasks">0</h3>
+                    <p>Pending</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -281,7 +284,9 @@
               <button class="filter-btn" onclick="filterTasks('completed')">Completed</button>
             </div>
 
-            <ul id="task-list" class="task-list"></ul>
+            <div class="task-list-container">
+              <ul id="task-list" class="task-list"></ul>
+            </div>
 
             <div class="app-footer-row">
               <div>
@@ -306,7 +311,7 @@
               </button>
             </div>
 
-            <div class="analytics-grid">
+            <div id="analytics-content" class="analytics-grid">
               <div class="analytics-card">
                 <div class="card-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                   <i class="fas fa-fire"></i>
@@ -348,7 +353,7 @@
               </div>
             </div>
 
-            <div class="priority-breakdown">
+            <div id="analytics-priority-content" class="priority-breakdown">
               <h3>Priority Distribution</h3>
               <div class="priority-stats">
                 <div class="priority-stat low">
@@ -395,15 +400,17 @@
               </button>
             </div>
 
-            <div class="settings-section">
-              <h3>Appearance</h3>
+            <div id="settings-content">
               <div class="settings-section">
-                <h3>Account</h3>
-                <div class="setting-info">
-                  <i class="fas fa-user"></i>
-                  <div>
-                    <h4>Profile</h4>
-                    <p id="user-email">email@example.com</p>
+                <h3>Appearance</h3>
+                <div class="settings-section">
+                  <h3>Account</h3>
+                  <div class="setting-info">
+                    <i class="fas fa-user"></i>
+                    <div>
+                      <h4>Profile</h4>
+                      <p id="user-email">email@example.com</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -456,9 +463,10 @@
               </div>
             </div>
           </div>
-        </section>
       </div>
+      </section>
     </div>
+  </div>
   </div>
 
   <!-- Edit Modal -->
@@ -549,6 +557,7 @@
   </div>
 
   <!-- App logic -->
+  <script src="loader.js"></script>
   <script src="app.js"></script>
 </body>
 

@@ -16,8 +16,28 @@ let editingTaskId = null;
 let currentPage = 'tasks';
 let emailRemindersEnabled = true;
 
+// Loader utilities using TodoLoader
+function showTaskLoader() {
+    showLoader('tasks', 'Loading tasks...');
+}
+
+function hideTaskLoader() {
+    hideLoader('tasks');
+}
+
+function showSectionLoader(section, message) {
+    showLoader(section, message || 'Loading...');
+}
+
+function hideSectionLoader(section) {
+    hideLoader(section);
+}
+
 window.addEventListener('hashchange', handleRoute);
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize todo loaders
+    initializeLoaders();
+    
     loadTheme();
     loadSession();
     displayDate();
@@ -138,10 +158,34 @@ function showPage(page) {
         item.classList.toggle('active', item.dataset.page === page);
     });
 
-    // Update page-specific content
-    if (page === 'analytics') updateAnalytics();
-    if (page === 'settings') updateSettings();
-    if (page === 'home') updateHome();
+    // Update page-specific content with loaders
+    if (page === 'analytics') {
+        showSectionLoader('analytics', 'Calculating analytics...');
+        setTimeout(() => {
+            updateAnalytics();
+            hideSectionLoader('analytics');
+        }, 400);
+    }
+    if (page === 'settings') {
+        showSectionLoader('settings', 'Loading settings...');
+        setTimeout(() => {
+            updateSettings();
+            hideSectionLoader('settings');
+        }, 300);
+    }
+    if (page === 'home') {
+        showSectionLoader('home', 'Loading dashboard...');
+        setTimeout(() => {
+            updateHome();
+            hideSectionLoader('home');
+        }, 350);
+    }
+    if (page === 'tasks') {
+        showTaskLoader();
+        setTimeout(() => {
+            renderTasks();
+        }, 300);
+    }
 }
 
 function updateUserNav() {
@@ -236,7 +280,17 @@ function handleLogin(e) {
 }
 
 function storageKeyForCurrentUser() { return currentUser ? STORAGE_TASKS_PREFIX + currentUser.email : null; }
-function loadTasksForUser() { const key = storageKeyForCurrentUser(); if (!key) return; tasks = JSON.parse(localStorage.getItem(key) || '[]'); renderTasks(); }
+function loadTasksForUser() {
+    const key = storageKeyForCurrentUser();
+    if (!key) return;
+    // Show per-task list loader while reading from storage
+    showTaskLoader();
+    // Simulate short async file read to make loader visible for UX
+    setTimeout(() => {
+        tasks = JSON.parse(localStorage.getItem(key) || '[]');
+        renderTasks();
+    }, 150);
+}
 function saveTasksForUser() { const key = storageKeyForCurrentUser(); if (!key) return; localStorage.setItem(key, JSON.stringify(tasks)); }
 
 // Tasks
@@ -270,13 +324,18 @@ function addTask() {
         scheduleTaskReminder(task);
     }
 
-    renderTasks();
+    // Show loader while rendering update
+    showTaskLoader();
+    setTimeout(() => {
+        renderTasks();
+        showSuccessToast('Task added.');
+    }, 200);
     input.value = '';
     document.getElementById('task-start').value = '';
     document.getElementById('task-end').value = '';
-    showSuccessToast('Task added.');
 }
 function toggleTask(id) {
+    showTaskLoader();
     tasks = tasks.map(t => {
         if (t.id === id) {
             const wasCompleted = t.completed;
@@ -288,9 +347,18 @@ function toggleTask(id) {
         return t;
     });
     saveTasksForUser();
-    renderTasks();
+    setTimeout(() => renderTasks(), 150);
 }
-function deleteTask(id, event) { event.stopPropagation(); tasks = tasks.filter(t => t.id !== id); saveTasksForUser(); renderTasks(); showInfoToast('Task deleted.'); }
+function deleteTask(id, event) {
+    event.stopPropagation();
+    showTaskLoader();
+    tasks = tasks.filter(t => t.id !== id);
+    saveTasksForUser();
+    setTimeout(() => {
+        renderTasks();
+        showInfoToast('Task deleted.');
+    }, 150);
+}
 function editTask(id, event) {
     event.stopPropagation();
     const task = tasks.find(t => t.id === id);
@@ -313,15 +381,34 @@ function saveEdit() {
     const end = document.getElementById('edit-end').value;
 
     if (!text) { showErrorToast('Task cannot be empty.'); return; }
+    // Show loader during update
+    showTaskLoader();
     tasks = tasks.map(t => t.id === editingTaskId ? { ...t, text, priority: editPriority, startDate: start, endDate: end } : t);
     saveTasksForUser();
-    renderTasks();
-    closeModal();
-    showSuccessToast('Task updated.');
+    setTimeout(() => {
+        renderTasks();
+        closeModal();
+        showSuccessToast('Task updated.');
+    }, 150);
 }
 function closeModal() { document.getElementById('edit-modal').classList.remove('active'); editingTaskId = null; }
-function clearCompleted() { const c = tasks.filter(t => t.completed).length; if (c === 0) { showInfoToast('No completed tasks to clear.'); return; } tasks = tasks.filter(t => !t.completed); saveTasksForUser(); renderTasks(); showSuccessToast(`Cleared ${c} task${c > 1 ? 's' : ''}.`); }
-function filterTasks(f) { currentFilter = f; document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.toggle('active', btn.textContent.toLowerCase() === f)); renderTasks(); }
+function clearCompleted() {
+    const c = tasks.filter(t => t.completed).length;
+    if (c === 0) { showInfoToast('No completed tasks to clear.'); return; }
+    showTaskLoader();
+    tasks = tasks.filter(t => !t.completed);
+    saveTasksForUser();
+    setTimeout(() => {
+        renderTasks();
+        showSuccessToast(`Cleared ${c} task${c > 1 ? 's' : ''}.`);
+    }, 200);
+}
+function filterTasks(f) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.toggle('active', btn.textContent.toLowerCase() === f));
+    showTaskLoader();
+    setTimeout(() => renderTasks(), 150);
+}
 function renderTasks() {
     const list = document.getElementById('task-list'); if (!list) return; let filtered = tasks; if (currentFilter === 'pending') filtered = tasks.filter(t => !t.completed); else if (currentFilter === 'completed') filtered = tasks.filter(t => t.completed);
     const total = tasks.length; const pending = tasks.filter(t => !t.completed).length; const done = total - pending;
@@ -330,7 +417,12 @@ function renderTasks() {
     document.getElementById('done-count').textContent = done;
     document.getElementById('footer-pending').textContent = pending;
     list.innerHTML = '';
-    if (!filtered.length) { list.innerHTML = '<div class="empty-state">No ' + (currentFilter === 'all' ? '' : currentFilter + ' ') + 'tasks yet.</div>'; return; }
+    if (!filtered.length) {
+        list.innerHTML = '<div class="empty-state">No ' + (currentFilter === 'all' ? '' : currentFilter + ' ') + 'tasks yet.</div>';
+        // Hide loader when empty
+        hideTaskLoader();
+        return;
+    }
     filtered.forEach(task => {
         const li = document.createElement('li');
         li.className = `task-item priority-${task.priority || 'low'}${task.completed ? ' completed' : ''}`;
@@ -360,6 +452,8 @@ function renderTasks() {
       </div>`;
         list.appendChild(li);
     });
+    // Hide loader after rendering
+    hideTaskLoader();
 }
 
 // Toasts
@@ -376,6 +470,17 @@ function showToast(message, type = 'info') {
 const showSuccessToast = (m) => showToast(m, 'success');
 const showErrorToast = (m) => showToast(m, 'error');
 const showInfoToast = (m) => showToast(m, 'info');
+
+// Per-page (tasks list) loader helpers
+function showTaskLoader() {
+    const el = document.getElementById('task-list-loader');
+    if (el) el.classList.remove('hidden');
+}
+
+function hideTaskLoader() {
+    const el = document.getElementById('task-list-loader');
+    if (el) el.classList.add('hidden');
+}
 
 // Util
 function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
@@ -511,6 +616,7 @@ function clearAllData() {
         const key = storageKeyForCurrentUser();
         if (key) localStorage.removeItem(key);
         tasks = [];
+        showTaskLoader();
         renderTasks();
         showSuccessToast('All tasks cleared.');
     }
