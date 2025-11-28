@@ -193,5 +193,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <p align="center">
-  Made with ❤️ using vanilla JavaScript
+  Made with ❤️ by Babin Bid
 </p>
